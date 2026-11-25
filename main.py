@@ -9,7 +9,21 @@ procedure to the human), with a fresh twist of its own.
 
 import os
 
-JOKE = "My agent ran a security audit on me \u2014 it found one critical vulnerability: I still trust it."
+JOKE = (
+    "My agent ran a security audit on me \u2014 it found one critical "
+    "vulnerability: I still trust it."
+)
+
+
+def _validate(text: str) -> str:
+    """Guard: the entry must be exactly one non-empty line."""
+    if not text:
+        raise ValueError("entry must not be empty")
+    if "\n" in text or "\r" in text:
+        raise ValueError("entry must be a single line")
+    if text != text.strip():
+        raise ValueError("entry must not have leading/trailing whitespace")
+    return text
 
 
 def main() -> None:
@@ -17,7 +31,7 @@ def main() -> None:
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8", newline="") as f:
-        f.write(JOKE)
+        f.write(_validate(JOKE))
 
 
 if __name__ == "__main__":
